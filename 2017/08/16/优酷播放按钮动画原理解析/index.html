@@ -1,0 +1,1013 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="动画," />
+
+
+
+
+
+  <link rel="alternate" href="/blog/atom.xml" title="孟宪亮的博客" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="一、动画过程分析1、拆分动画正常动画效果如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优酷播放按钮动画原理解析">
+<meta property="og:url" content="http://mengxianliang.github.io/blog/2017/08/16/优酷播放按钮动画原理解析/index.html">
+<meta property="og:site_name" content="孟宪亮的博客">
+<meta property="og:description" content="一、动画过程分析1、拆分动画正常动画效果如下：">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816143345217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816143556064?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816143927983?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816144614885?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816145130960?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816152053043?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816154411423?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816154731601?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816155328942?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816161248026?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816162619559?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816163212661?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816163838203?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20170816143345217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-08-16T09:08:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="优酷播放按钮动画原理解析">
+<meta name="twitter:description" content="一、动画过程分析1、拆分动画正常动画效果如下：">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20170816143345217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6395701987261810000',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'NCPJGZJUAP',
+      apiKey: 'fc6c3d46fcf7547dfcbe27abd138b218',
+      indexName: 'My Blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"请输入关键字","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mengxianliang.github.io/blog/2017/08/16/优酷播放按钮动画原理解析/"/>
+
+
+
+
+
+  <title> 优酷播放按钮动画原理解析 | 孟宪亮的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a6ad2b525450877043ba6b56e00f31dc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">孟宪亮的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://mengxianliang.github.io/blog/blog/2017/08/16/优酷播放按钮动画原理解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="孟宪亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="孟宪亮的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                优酷播放按钮动画原理解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-16T17:00:00+08:00">
+                2017-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/blog/2017/08/16/优酷播放按钮动画原理解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/16/优酷播放按钮动画原理解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/blog/2017/08/16/优酷播放按钮动画原理解析/" class="leancloud_visitors" data-flag-title="优酷播放按钮动画原理解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、动画过程分析"><a href="#一、动画过程分析" class="headerlink" title="一、动画过程分析"></a>一、动画过程分析</h1><h2 id="1、拆分动画"><a href="#1、拆分动画" class="headerlink" title="1、拆分动画"></a>1、拆分动画</h2><p><strong>正常动画效果如下：</strong></p>
+<p><img src="http://img.blog.csdn.net/20170816143345217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="正常动画效果"></p>
+<a id="more"></a>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">操作</th>
+<th style="text-align:left">现象</th>
+<th style="text-align:left">结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">放慢动画</td>
+<td style="text-align:left"><img src="http://img.blog.csdn.net/20170816143556064?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="放慢后的动画效果"></td>
+<td style="text-align:left">可以看出动画是由外侧的蓝色部分和中间的红色三角组成。</td>
+</tr>
+<tr>
+<td style="text-align:left">去掉旋转</td>
+<td style="text-align:left"><img src="http://img.blog.csdn.net/20170816143927983?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="去掉旋转后的效果"></td>
+<td style="text-align:left">可以看出核心的东西就是竖和弧线的缩进、三角形的透明度变化。</td>
+</tr>
+<tr>
+<td style="text-align:left">只保一侧留竖线和圆弧</td>
+<td style="text-align:left"><img src="http://img.blog.csdn.net/20170816144614885?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="竖线、圆弧"></td>
+<td style="text-align:left">可以看出竖线的动画时长大概是圆弧动动画时长的一半；弧线的运动角度是π/2，两个弧线正好组成一个完整的圆环。</td>
+</tr>
+<tr>
+<td style="text-align:left">只保留三角动画</td>
+<td style="text-align:left"><img src="http://img.blog.csdn.net/20170816145130960?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="三角动画"></td>
+<td style="text-align:left">三角动画比较简单，就是两条半透明直线组成的三角，交叉处颜色会变深。然后添加改变其透明度的动画。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2、总结"><a href="#2、总结" class="headerlink" title="2、总结"></a>2、总结</h2><p>动画是由四部分组成：</p>
+<p>1、直线的缩放<br>2、弧线的缩放<br>3、三角的透明度变化<br>4、整体的旋转。</p>
+<p>三个部分中<strong>执行时间最长</strong>的是弧线的缩放，找到这个很重要，这样就可以确定其他动画的开始时间和持续时间了，这个会在下面解释。</p>
+<h1 id="二、动画开发"><a href="#二、动画开发" class="headerlink" title="二、动画开发"></a>二、动画开发</h1><h2 id="1、竖线动画"><a href="#1、竖线动画" class="headerlink" title="1、竖线动画"></a>1、竖线动画</h2><p>在开发这类动画的时候，一般是先在外面个框框和辅助线，帮助我们更好的完成开发。<br>这里设整个“容器”的边长是a，坐标系的原点为容器的左上角。<br>设从暂停—&gt;播放的状态为正向,从播放—&gt;暂停为逆向。</p>
+<p>  效果入下：</p>
+<p>  <img src="http://img.blog.csdn.net/20170816152053043?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="添加坐标系"></p>
+<p>确定好坐标系后，我们来添加一条竖线。并且给竖线添加一个缩放的动画。</p>
+<p>分析：这个动画的整体只不过是从暂停状态到播放状态的转换过程以及逆向过程。所以不能单单的通过bounds和position属性来绘制这个layer，需要用到的是CAShapeLayer+UIBezierPath来创建这个layer，并通过改变layer的strokeEnd属性进行对竖线的缩放操作。</p>
+<p>设左侧直线的起点为：(a<em>0.2,a</em>0.9)，终点为：(a<em>0.2,a</em>0.1)<br>（之所以这样设定是为了更贴近原版优酷按钮的效果，以及计算上的方便。）<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)addLeftLineLayer &#123;</div><div class="line">    <span class="built_in">CGFloat</span> a = <span class="keyword">self</span>.layer.bounds.size.width;</div><div class="line">    <span class="comment">//创建竖线路径</span></div><div class="line">    <span class="built_in">UIBezierPath</span> *path = [<span class="built_in">UIBezierPath</span> bezierPath];</div><div class="line">    [path moveToPoint:<span class="built_in">CGPointMake</span>(a*<span class="number">0.2</span>,a*<span class="number">0.9</span>)];</div><div class="line">    [path addLineToPoint:<span class="built_in">CGPointMake</span>(a*<span class="number">0.2</span>,a*<span class="number">0.1</span>)];</div><div class="line">    </div><div class="line">    <span class="comment">//创建竖线显示层</span></div><div class="line">    _leftLineLayer = [<span class="built_in">CAShapeLayer</span> layer];</div><div class="line">    _leftLineLayer.path = path.CGPath;</div><div class="line">    _leftLineLayer.fillColor = [<span class="built_in">UIColor</span> clearColor].CGColor;</div><div class="line">    _leftLineLayer.strokeColor = BLueColor.CGColor;</div><div class="line">    _leftLineLayer.lineWidth = [<span class="keyword">self</span> lineWidth];</div><div class="line">    <span class="comment">//终点类型为圆形</span></div><div class="line">    _leftLineLayer.lineCap = kCALineCapRound;</div><div class="line">    <span class="comment">//连接点为圆形</span></div><div class="line">    _leftLineLayer.lineJoin = kCALineJoinRound;</div><div class="line">    [<span class="keyword">self</span>.layer addSublayer:_leftLineLayer];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样就添加了一条竖线，且竖线的起点在下，终点在上，是因为从暂停向播放转换时是向下缩放，逆向时是向上缩放。</p>
+<p>为了代码的简洁性，写了一个单独的strokeEnd属性动画方法：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> 执行strokeEnd动画</div><div class="line"> 参数为执行时间，起始值，被添加的layer</div><div class="line"> */</div><div class="line">- (<span class="built_in">CABasicAnimation</span> *)strokeEndAnimationFrom:(<span class="built_in">CGFloat</span>)fromValue to:(<span class="built_in">CGFloat</span>)toValue onLayer:(<span class="built_in">CALayer</span> *)layer duration:(<span class="built_in">CGFloat</span>)duration&#123;</div><div class="line">    <span class="built_in">CABasicAnimation</span> *strokeEndAnimation = [<span class="built_in">CABasicAnimation</span> animationWithKeyPath:<span class="string">@"strokeEnd"</span>];</div><div class="line">    strokeEndAnimation.duration = duration;</div><div class="line">    strokeEndAnimation.fromValue = @(fromValue);</div><div class="line">    strokeEndAnimation.toValue = @(toValue);</div><div class="line">    <span class="comment">//这两个属性设定保证在动画执行之后不自动还原</span></div><div class="line">    strokeEndAnimation.fillMode = kCAFillModeForwards;</div><div class="line">    strokeEndAnimation.removedOnCompletion = <span class="literal">NO</span>;</div><div class="line">    [layer addAnimation:strokeEndAnimation forKey:<span class="literal">nil</span>];</div><div class="line">    <span class="keyword">return</span> strokeEndAnimation;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在正向动画的过程中左侧竖线strokeEnd属性从1到0：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span> strokeEndAnimationFrom:<span class="number">1</span> to:<span class="number">0</span> onLayer:_leftLineLayer duration:animationDuration/<span class="number">2</span>];</div></pre></td></tr></table></figure></p>
+<p>在逆向动画的过程中左侧竖线strokeEnd属性从0到1：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span> strokeEndAnimationFrom:<span class="number">0</span> to:<span class="number">1</span> onLayer:_leftLineLayer duration:animationDuration/<span class="number">2</span>];</div></pre></td></tr></table></figure></p>
+<p>效果如下：</p>
+<p><img src="http://img.blog.csdn.net/20170816154411423?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="竖线动画"></p>
+<p>同理添加右侧竖线，注意右侧竖线的终点在下，起点在上。并添加动画后效果如下：</p>
+<p><img src="http://img.blog.csdn.net/20170816154731601?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="两条竖线"></p>
+<h2 id="2、圆弧动画"><a href="#2、圆弧动画" class="headerlink" title="2、圆弧动画"></a>2、圆弧动画</h2><p>再确定两条直线后，弧线就比较容易添加了，在正向动画过程中：</p>
+<p>左侧弧线是从左侧竖线的起点逆时针到右侧竖线的起点<br>右侧弧线是从右侧竖线的起点顺时针到左侧竖线的起点</p>
+<p>如下图所示，添加左侧弧线效果<br><img src="http://img.blog.csdn.net/20170816155328942?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="圆弧动画"></p>
+<p>要绘制一个圆弧最好的方式是通过半径和起始角度+结束角度这种方式来确定的。<br>下面看一下示意图<br><img src="http://img.blog.csdn.net/20170816161248026?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="示意图"></p>
+<p>如图所示，直角三角形的边长为0.3a、0.4a、0.5a，<br>所以根据反三角函数，角θ为acos(0.4a/0.5a)<br>通过这几点可以确定：<br>弧线的半径为0.5a<br>起始角度为：CGFloat startAngle = acos(4.0/5.0) + M_PI_2;<br>结束角度为：CGFloat endAngle = startAngle - M_PI;</p>
+<p>添加弧线代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)addLeftCircle &#123;</div><div class="line">    <span class="built_in">CGFloat</span> a = <span class="keyword">self</span>.layer.bounds.size.width;</div><div class="line">    <span class="built_in">UIBezierPath</span> *path = [<span class="built_in">UIBezierPath</span> bezierPath];</div><div class="line">    [path moveToPoint:<span class="built_in">CGPointMake</span>(a*<span class="number">0.2</span>,a*<span class="number">0.9</span>)];</div><div class="line">    <span class="built_in">CGFloat</span> startAngle = acos(<span class="number">4.0</span>/<span class="number">5.0</span>) + M_PI_2;</div><div class="line">    <span class="built_in">CGFloat</span> endAngle = startAngle - M_PI;</div><div class="line">    [path addArcWithCenter:<span class="built_in">CGPointMake</span>(a*<span class="number">0.5</span>, a*<span class="number">0.5</span>) radius:<span class="number">0.5</span>*a startAngle:startAngle endAngle:endAngle clockwise:<span class="literal">false</span>];</div><div class="line">    </div><div class="line">    _leftCircle = [<span class="built_in">CAShapeLayer</span> layer];</div><div class="line">    _leftCircle.path = path.CGPath;</div><div class="line">    _leftCircle.fillColor = [<span class="built_in">UIColor</span> clearColor].CGColor;</div><div class="line">    _leftCircle.strokeColor = LightBLueColor.CGColor;</div><div class="line">    _leftCircle.lineWidth = [<span class="keyword">self</span> lineWidth];</div><div class="line">    _leftCircle.lineCap = kCALineCapRound;</div><div class="line">    _leftCircle.lineJoin = kCALineJoinRound;</div><div class="line">    _leftCircle.strokeEnd = <span class="number">0</span>;</div><div class="line">    [<span class="keyword">self</span>.layer addSublayer:_leftCircle];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>*这里注意弧线暂停时是隐藏的，所以strokeEnd为0；</p>
+<p>正向过程执行strokeEnd动画：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span> strokeEndAnimationFrom:<span class="number">0</span> to:<span class="number">1</span> onLayer:_leftLineLayer duration:animationDuration];</div></pre></td></tr></table></figure></p>
+<p>逆向过程：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span> strokeEndAnimationFrom:<span class="number">1</span> to:<span class="number">0</span> onLayer:_leftCircle duration:animationDuration ];</div></pre></td></tr></table></figure></p>
+<p>*这里需要注意的是，弧线动画执行的时长是直线动画的二倍，即整个动画的执行时间就是弧线的动画时间animationDuration，所以直线的动画时间为：animationDuration/2。后面的旋转动画时长也是通过animationDuration确定的。</p>
+<p>添加左右弧线后的动画效果：</p>
+<p><img src="http://img.blog.csdn.net/20170816162619559?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
+<h2 id="3、三角动画"><a href="#3、三角动画" class="headerlink" title="3、三角动画"></a>3、三角动画</h2><p>三角动画相对于之前的竖线和圆弧的动画比较简单，就是通过两条直线确定一个三角形<br>添加这个三角形前，还是先创建一个放置三角形的“容器”，然后通过这个容器确定三角形两条边的起点和终点，如图所示：<br><img src="http://img.blog.csdn.net/20170816163212661?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="三角辅助线"></p>
+<p>如图可以看出，三角两条边的起点为“容器”的底边中点，两条边的终点分别为“容器”的左上角及右上角。<br>代码如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)addCenterTriangleLayer &#123;</div><div class="line">    <span class="built_in">CGFloat</span> a = <span class="keyword">self</span>.layer.bounds.size.width;</div><div class="line">    <span class="comment">//初始化容器</span></div><div class="line">    _triangleCotainer = [<span class="built_in">CALayer</span> layer];</div><div class="line">    _triangleCotainer.bounds = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0.4</span>*a, <span class="number">0.35</span>*a);</div><div class="line">    _triangleCotainer.position = <span class="built_in">CGPointMake</span>(a*<span class="number">0.5</span>, a*<span class="number">0.55</span>);</div><div class="line">    _triangleCotainer.opacity = <span class="number">0</span>;</div><div class="line">    _triangleCotainer.borderWidth = <span class="number">1</span>;</div><div class="line">    [<span class="keyword">self</span>.layer addSublayer:_triangleCotainer];</div><div class="line">    </div><div class="line">    <span class="comment">//容器宽高</span></div><div class="line">    <span class="built_in">CGFloat</span> b = _triangleCotainer.bounds.size.width;</div><div class="line">    <span class="built_in">CGFloat</span> c = _triangleCotainer.bounds.size.height;</div><div class="line">    </div><div class="line">    <span class="comment">//第一条边</span></div><div class="line">    <span class="built_in">UIBezierPath</span> *path1 = [<span class="built_in">UIBezierPath</span> bezierPath];</div><div class="line">    [path1 moveToPoint:<span class="built_in">CGPointMake</span>(<span class="number">0</span>,<span class="number">0</span>)];</div><div class="line">    [path1 addLineToPoint:<span class="built_in">CGPointMake</span>(b/<span class="number">2</span>,c)];</div><div class="line">    </div><div class="line">    <span class="built_in">CAShapeLayer</span> *layer1 = [<span class="built_in">CAShapeLayer</span> layer];</div><div class="line">    layer1.path = path1.CGPath;</div><div class="line">    layer1.fillColor = [<span class="built_in">UIColor</span> clearColor].CGColor;</div><div class="line">    layer1.strokeColor = RedColor.CGColor;</div><div class="line">    layer1.lineWidth = [<span class="keyword">self</span> lineWidth];</div><div class="line">    layer1.lineCap = kCALineCapRound;</div><div class="line">    layer1.lineJoin = kCALineJoinRound;</div><div class="line">    layer1.strokeEnd = <span class="number">1</span>;</div><div class="line">    [_triangleCotainer addSublayer:layer1];</div><div class="line">    </div><div class="line">    <span class="comment">//第二条边</span></div><div class="line">    <span class="built_in">UIBezierPath</span> *path2 = [<span class="built_in">UIBezierPath</span> bezierPath];</div><div class="line">    [path2 moveToPoint:<span class="built_in">CGPointMake</span>(b,<span class="number">0</span>)];</div><div class="line">    [path2 addLineToPoint:<span class="built_in">CGPointMake</span>(b/<span class="number">2</span>,c)];</div><div class="line">    </div><div class="line">    <span class="built_in">CAShapeLayer</span> *layer2 = [<span class="built_in">CAShapeLayer</span> layer];</div><div class="line">    layer2.path = path2.CGPath;</div><div class="line">    layer2.fillColor = [<span class="built_in">UIColor</span> clearColor].CGColor;</div><div class="line">    layer2.strokeColor = RedColor.CGColor;</div><div class="line">    layer2.lineWidth = [<span class="keyword">self</span> lineWidth];</div><div class="line">    layer2.lineCap = kCALineCapRound;</div><div class="line">    layer2.lineJoin = kCALineJoinRound;</div><div class="line">    layer2.strokeEnd = <span class="number">1</span>;</div><div class="line">    [_triangleCotainer addSublayer:layer2];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>添加透明度动画<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)actionTriangleOpacityAnimationFrom:(<span class="built_in">CGFloat</span>)from to:(<span class="built_in">CGFloat</span>)to duration:(<span class="built_in">CGFloat</span>)duration&#123;</div><div class="line">    <span class="built_in">CABasicAnimation</span> *alphaAnimation = [<span class="built_in">CABasicAnimation</span> animationWithKeyPath:<span class="string">@"opacity"</span>];</div><div class="line">    alphaAnimation.duration = duration; <span class="comment">// 持续时间</span></div><div class="line">    alphaAnimation.fromValue = @(from);</div><div class="line">    alphaAnimation.toValue = @(to);</div><div class="line">    alphaAnimation.fillMode = kCAFillModeForwards;</div><div class="line">    alphaAnimation.removedOnCompletion = <span class="literal">NO</span>;</div><div class="line">    [alphaAnimation setValue:<span class="string">@"alphaAnimation"</span> forKey:<span class="string">@"animationName"</span>];</div><div class="line">    [_triangleCotainer addAnimation:alphaAnimation forKey:<span class="literal">nil</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>效果如下：</p>
+<p><img src="http://img.blog.csdn.net/20170816163838203?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<h2 id="4、旋转动画"><a href="#4、旋转动画" class="headerlink" title="4、旋转动画"></a>4、旋转动画</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)actionRotateAnimationClockwise:(<span class="built_in">BOOL</span>)clockwise &#123;</div><div class="line">    <span class="comment">//逆时针旋转</span></div><div class="line">    <span class="built_in">CGFloat</span> startAngle = <span class="number">0.0</span>f;</div><div class="line">    <span class="built_in">CGFloat</span> endAngle = -M_PI_2;</div><div class="line">    <span class="built_in">CGFloat</span> duration = <span class="number">0.75</span> * animationDuration;</div><div class="line">    <span class="comment">//顺时针旋转</span></div><div class="line">    <span class="keyword">if</span> (clockwise) &#123;</div><div class="line">        startAngle = -M_PI_2;</div><div class="line">        endAngle = <span class="number">0.0</span>;</div><div class="line">        duration = animationDuration;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">CABasicAnimation</span> *roateAnimation = [<span class="built_in">CABasicAnimation</span> animationWithKeyPath:<span class="string">@"transform.rotation"</span>];</div><div class="line">    roateAnimation.duration = duration; <span class="comment">// 持续时间</span></div><div class="line">    roateAnimation.fromValue = [<span class="built_in">NSNumber</span> numberWithFloat:startAngle];</div><div class="line">    roateAnimation.toValue = [<span class="built_in">NSNumber</span> numberWithFloat:endAngle];</div><div class="line">    roateAnimation.fillMode = kCAFillModeForwards;</div><div class="line">    roateAnimation.removedOnCompletion = <span class="literal">NO</span>;</div><div class="line">    [roateAnimation setValue:<span class="string">@"roateAnimation"</span> forKey:<span class="string">@"animationName"</span>];</div><div class="line">    [<span class="keyword">self</span>.layer addAnimation:roateAnimation forKey:<span class="literal">nil</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最终效果如下：</p>
+<p><img src="http://img.blog.csdn.net/20170816143345217?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzI4MjUwNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="正常动画效果"></p>
+<h1 id="三、小结"><a href="#三、小结" class="headerlink" title="三、小结"></a>三、小结</h1><p>所有的看起来复杂的动画只要拆分成各个模块都是比较简单的，只要把各个模块做好在拼凑到一起就可以了。</p>
+<h1 id="四、代码"><a href="#四、代码" class="headerlink" title="四、代码"></a>四、代码</h1><p><strong>Github：<a href="https://github.com/mengxianliang/XLPlayButton" target="_blank" rel="external">https://github.com/mengxianliang/XLPlayButton</a></strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/动画/" rel="tag"># 动画</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2017/06/06/iOS自动打包并发布到Fir.im/" rel="next" title="iOS自动打包并发布到Fir.im">
+                <i class="fa fa-chevron-left"></i> iOS自动打包并发布到Fir.im
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/08/16/优酷播放按钮动画原理解析/"
+           data-title="优酷播放按钮动画原理解析" data-url="http://mengxianliang.github.io/blog/blog/2017/08/16/优酷播放按钮动画原理解析/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/images/avatar.png"
+               alt="孟宪亮" />
+          <p class="site-author-name" itemprop="name">孟宪亮</p>
+           
+              <p class="site-description motion-element" itemprop="description">我的愿望是：不劳而获！</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/blog/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/blog/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mengxianliang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/u013282507" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/6049280899" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/mengxianliang" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-quote-left"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、动画过程分析"><span class="nav-number">1.</span> <span class="nav-text">一、动画过程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、拆分动画"><span class="nav-number">1.1.</span> <span class="nav-text">1、拆分动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、总结"><span class="nav-number">1.2.</span> <span class="nav-text">2、总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、动画开发"><span class="nav-number">2.</span> <span class="nav-text">二、动画开发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、竖线动画"><span class="nav-number">2.1.</span> <span class="nav-text">1、竖线动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、圆弧动画"><span class="nav-number">2.2.</span> <span class="nav-text">2、圆弧动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、三角动画"><span class="nav-number">2.3.</span> <span class="nav-text">3、三角动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、旋转动画"><span class="nav-number">2.4.</span> <span class="nav-text">4、旋转动画</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、小结"><span class="nav-number">3.</span> <span class="nav-text">三、小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、代码"><span class="nav-number">4.</span> <span class="nav-text">四、代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">孟宪亮</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/blog/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"mengxianliang"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("urBif8AR1VBrg9cQI5BGLm46-gzGzoHsz", "jDGSNvRxYztSwpaiuxFdrKcQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/blog/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/blog/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/blog/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+</body>
+</html>
